@@ -5,50 +5,35 @@ calc_percents <- function(x){
   percents
 }
 
-geom_tunnel <- function(mapping = NULL, data = NULL){
-  mapping
+
+tunnel <- function(df, values, levels) {
+  values <- rlang::enquo(values)
+  levels <- rlang::enquo(levels)
+  data <- prepare_data(df, values, levels)
+  data
 }
 
 
-build_grid <- function(y, percents){
-  y <- forcats::fct_reorder(y, percents, .desc = TRUE)
-  # y is the categorical variable
-  data.frame(
-    x = 0,
-    y = y,
-    width = percents
-  )
+prepare_data <- function(df, values, levels) {
+  agg <- aggregate_data(df, values, levels)
+  agg <- agg |>
+    dplyr::mutate(
+      width = calc_percents(x),
+      y = forcats::fct_reorder(y, width)
+    ) |>
+    dplyr::select("x", "y", "width")
 }
 
-StatTunnel <- ggplot2::ggproto("StatTunnel", ggplot2::Stat,
-  required_aes = c("x", "y"),
 
-  setup_params = function(data, params) {
-    agg <- data |>
-      dplyr::group_by(y) |>
-      dplyr::summarise(sum = sum(x))
-    top <- max(agg$sum, na.rm = TRUE)
-    params$max.value <- top
-    params
-  },
+aggregate_data <- function(df, values, levels) {
+  agg <- df |>
+    dplyr::group_by(!!levels) |>
+    dplyr::summarise(x = sum(!!values)) |>
+    dplyr::rename("y" = !!levels)
 
-  compute_group = function(data, scales, max.value = 0) {
-    total <- sum(data$x, na.rm = TRUE)
-    percent <- total / max.value
-    data.frame(width = percent, x = 0, y = data$y)
-  }
-
-)
-
-stat_tunnel <- function(mapping = NULL, data = NULL, geom = "tile",
-                        position = "identity", na.rm = FALSE, show.legend = NA,
-                        inherit.aes = TRUE, height = 0.8, ...) {
-  ggplot2::layer(
-    stat = StatTunnel, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, height = height, ...)
-  )
+  return(agg)
 }
+
 
 
 

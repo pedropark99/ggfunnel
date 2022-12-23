@@ -1,9 +1,9 @@
 {
     "id": "498D2BE8",
-    "path": "~/Documentos/Projetos/Packages/ggtunnel/R/hello.R",
-    "project_path": "R/hello.R",
+    "path": "~/Documentos/Projetos/Packages/ggtunnel/R/tunnel.R",
+    "project_path": "R/tunnel.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "4293167811",
     "contents": "",
     "dirty": false,
     "created": 1671831165864.0,
@@ -11,14 +11,16 @@
     "relative_order": 1,
     "properties": {
         "source_window_id": "",
-        "Source": "Source"
+        "Source": "Source",
+        "cursorPosition": "15,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1671831163,
+    "lastKnownWriteTime": 1671832986,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1671831163,
+    "last_content_update": 1671832986871,
     "read_only": false,
     "read_only_alternatives": []
 }

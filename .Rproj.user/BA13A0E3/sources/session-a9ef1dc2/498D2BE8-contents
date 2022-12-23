@@ -23,11 +23,17 @@ build_grid <- function(y, percents){
 StatTunnel <- ggplot2::ggproto("StatTunnel", ggplot2::Stat,
   required_aes = c("x", "y"),
 
-  compute_group = function(data, scales) {
-    p <- calc_percents(data$x)
-    print(data$x)
-    print(p)
-    build_grid(data$y, p)
+  setup_params = function(data, params) {
+    agg <- aggregate(data$x, list(groups = data$y), sum)
+    top <- max(agg$x, na.rm = TRUE)
+    params$max.value <- top
+    params
+  },
+
+  compute_group = function(data, scales, max.value = 0) {
+    total <- sum(data$x, na.rm = TRUE)
+    percent <- total / max.value
+    data.frame(width = percent, x = 0, y = data$y)
   }
 
 )

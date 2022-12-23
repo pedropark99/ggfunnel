@@ -24,8 +24,10 @@ StatTunnel <- ggplot2::ggproto("StatTunnel", ggplot2::Stat,
   required_aes = c("x", "y"),
 
   setup_params = function(data, params) {
-    agg <- aggregate(data$x, list(groups = data$y), sum)
-    top <- max(agg$x, na.rm = TRUE)
+    agg <- data |>
+      dplyr::group_by(y) |>
+      dplyr::summarise(sum = sum(x))
+    top <- max(agg$sum, na.rm = TRUE)
     params$max.value <- top
     params
   },

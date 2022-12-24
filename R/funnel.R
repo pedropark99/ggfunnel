@@ -1,22 +1,21 @@
-
-calc_percents <- function(x){
-  top <- max(x, na.rm = TRUE)
-  percents <- x / top
-  percents
-}
-
-
-tunnel <- function(df, values, levels) {
+#' Plot a Funnel chart
+#'
+#' @param data The data.frame with your data;
+#' @param values The column name where are the values you want to display in your funnel chart;
+#' @param levels The column name with the "levels" (or the "groups") you want to
+#'   display in your funnel chart;
+#'
+tunnel <- function(data, values, levels) {
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
 
-  data <- prepare_data(df, values, levels)
+  data <- prepare_data(data, values, levels)
   plot_tunnel(data)
 }
 
 
-prepare_data <- function(df, values, levels) {
-  agg <- aggregate_data(df, values, levels)
+prepare_data <- function(data, values, levels) {
+  agg <- aggregate_data(data, values, levels)
   agg <- agg |>
     dplyr::mutate(width = calc_percents(x)) |>
     dplyr::select("x", "y", "width")

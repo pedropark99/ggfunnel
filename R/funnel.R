@@ -5,12 +5,13 @@
 #' @param levels The column name with the "levels" (or the "groups") you want to
 #'   display in your funnel chart;
 #'
-tunnel <- function(data, values, levels) {
+#' @export
+funnel <- function(data, values, levels) {
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
 
   data <- prepare_data(data, values, levels)
-  plot_tunnel(data)
+  plot_funnel(data)
 }
 
 
@@ -19,6 +20,12 @@ prepare_data <- function(data, values, levels) {
   agg <- agg |>
     dplyr::mutate(width = calc_percents(x)) |>
     dplyr::select("x", "y", "width")
+}
+
+
+calc_percents <- function(x) {
+  top <- max(x, na.rm = TRUE)
+  x / top
 }
 
 
@@ -32,7 +39,7 @@ aggregate_data <- function(df, values, levels) {
 }
 
 
-plot_tunnel <- function(data) {
+plot_funnel <- function(data) {
   data |>
     ggplot2::ggplot() +
     ggplot2::geom_tile(
@@ -43,7 +50,7 @@ plot_tunnel <- function(data) {
         height = 0.8
       )
     ) +
-    theme_tunnel()
+    theme_funnel()
 }
 
 

@@ -43,7 +43,8 @@ plot_tunnel <- function(data) {
         width = width,
         height = 0.8
       )
-    )
+    ) +
+    theme_tunnel()
 }
 
 

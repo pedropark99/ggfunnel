@@ -13,7 +13,15 @@ group_data <- function(data, table_specs) {
 
 summarise_data <- function(data, table_specs) {
   values <- table_specs$values
-  dplyr::summarise(data, x = sum(!!values))
+  fun <- get_agg_function(table_specs)
+  dplyr::summarise(data, x = fun(!!values))
+}
+
+get_agg_function <- function(table_specs) {
+  switch (table_specs$stat,
+    "count" = dplyr::count,
+    "sum" = sum
+  )
 }
 
 rename_columns <- function(data, table_specs) {

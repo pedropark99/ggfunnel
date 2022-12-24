@@ -6,12 +6,12 @@ calc_percents <- function(x){
 }
 
 
-tunnel <- function(df, values, levels) {
+funnel <- function(df, values, levels) {
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
 
   data <- prepare_data(df, values, levels)
-  plot_tunnel(data)
+  plot_funnel(data)
 }
 
 
@@ -33,7 +33,7 @@ aggregate_data <- function(df, values, levels) {
 }
 
 
-plot_tunnel <- function(data) {
+plot_funnel <- function(data) {
   data |>
     ggplot2::ggplot() +
     ggplot2::geom_tile(
@@ -44,7 +44,7 @@ plot_tunnel <- function(data) {
         height = 0.8
       )
     ) +
-    theme_tunnel()
+    theme_funnel()
 }
 
 

@@ -8,8 +8,8 @@ calc_percents <- function(x){
 
 
 
-StatTunnel <- ggplot2::ggproto(
-  "StatTunnel", ggplot2::Stat,
+StatFunnel <- ggplot2::ggproto(
+  "StatFunnel", ggplot2::Stat,
 
   required_aes = c("x", "y"),
 
@@ -29,7 +29,7 @@ StatTunnel <- ggplot2::ggproto(
 
 
 
-stat_tunnel <- function(mapping = NULL, data = NULL, geom = "tile",
+stat_funnel <- function(mapping = NULL, data = NULL, geom = "tile",
                         position = "identity", na.rm = FALSE, show.legend = NA,
                         inherit.aes = TRUE, height = 0.8, ...) {
 

@@ -1,6 +1,6 @@
 
 
-theme_tunnel <- function() {
+theme_funnel <- function() {
   ggplot2::theme_void() +
     ggplot2::theme(
       axis.title.y = ggplot2::element_text(

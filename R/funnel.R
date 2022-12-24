@@ -6,50 +6,30 @@
 #'   display in your funnel chart;
 #'
 #' @export
-funnel <- function(data, values, levels) {
+funnel <- function(data, values, levels, stat = "sum", ...) {
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
+  stat <- match.arg(stat, c("count", "sum", "identity"))
 
-  data <- prepare_data(data, values, levels)
-  plot_funnel(data)
+  table_specs <- list(
+    values = values, levels = levels, stat = stat
+  )
+  data <- prepare_data(data, table_specs)
+  plot_funnel(data, ...)
 }
 
 
-prepare_data <- function(data, values, levels) {
-  agg <- aggregate_data(data, values, levels)
-  agg <- agg |>
-    dplyr::mutate(width = calc_percents(x)) |>
-    dplyr::select("x", "y", "width")
+prepare_data <- function(data, table_specs) {
+  if (table_specs$stat != "identity") {
+    agg <- aggregate_data(data, table_specs)
+  }
+  agg <- calc_percents(agg)
+  dplyr::select(agg, "x", "y", "width")
 }
 
 
-calc_percents <- function(x) {
-  top <- max(x, na.rm = TRUE)
-  x / top
-}
 
-
-aggregate_data <- function(data, values, levels) {
-  data <- group_data(data, levels)
-  agg <- summarise_data(data, values)
-  agg <- rename_columns(agg, levels)
-
-  return(agg)
-}
-
-group_data <- function(data, levels) {
-  dplyr::group_by(data, !!levels)
-}
-
-summarise_data <- function(data, values) {
-  dplyr::summarise(data, x = sum(!!values))
-}
-
-rename_columns <- function(data, levels) {
-  dplyr::rename(data, "y" = !!levels)
-}
-
-plot_funnel <- function(data) {
+plot_funnel <- function(data, ...) {
   data |>
     ggplot2::ggplot() +
     ggplot2::geom_tile(

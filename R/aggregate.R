@@ -1,0 +1,30 @@
+aggregate_data <- function(data, table_specs) {
+  data <- group_data(data, table_specs)
+  agg <- summarise_data(data, table_specs)
+  agg <- rename_columns(agg, table_specs)
+
+  return(agg)
+}
+
+group_data <- function(data, table_specs) {
+  levels <- table_specs$levels
+  dplyr::group_by(data, !!levels)
+}
+
+summarise_data <- function(data, table_specs) {
+  values <- table_specs$values
+  dplyr::summarise(data, x = sum(!!values))
+}
+
+rename_columns <- function(data, table_specs) {
+  levels <- table_specs$levels
+  dplyr::rename(data, "y" = !!levels)
+}
+
+
+calc_percents <- function(data) {
+  dplyr::mutate(
+    data,
+    width = .data$x / max(.data$x)
+  )
+}

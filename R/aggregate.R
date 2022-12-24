@@ -1,8 +1,6 @@
 aggregate_data <- function(data, table_specs) {
   data <- group_data(data, table_specs)
   agg <- summarise_data(data, table_specs)
-  agg <- rename_columns(agg, table_specs)
-
   return(agg)
 }
 
@@ -22,11 +20,6 @@ get_agg_function <- function(table_specs) {
     "count" = dplyr::count,
     "sum" = sum
   )
-}
-
-rename_columns <- function(data, table_specs) {
-  levels <- table_specs$levels
-  dplyr::rename(data, "y" = !!levels)
 }
 
 

@@ -7,3 +7,12 @@ a <- ggfunnel::intermediate |>
 
 
 print(a)
+
+
+# b <- ggfunnel::aggregates |>
+#   ggfunnel::funnel(
+#     values = N_users, levels = Step,
+#     stat = "identity"
+#   )
+#
+# print(b)

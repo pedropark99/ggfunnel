@@ -21,10 +21,24 @@ funnel <- function(data, values, levels, stat = "sum", ...) {
 
 prepare_data <- function(data, table_specs) {
   if (table_specs$stat != "identity") {
-    agg <- aggregate_data(data, table_specs)
+    data <- aggregate_data(data, table_specs)
   }
-  agg <- calc_percents(agg)
-  dplyr::select(agg, "x", "y", "width")
+  data <- rename_columns(data, table_specs)
+  data <- calc_percents(data)
+  dplyr::select(data, "x", "y", "width")
+}
+
+rename_columns <- function(data, table_specs) {
+  levels <- table_specs$levels
+  values <- table_specs$values
+  stat <- table_specs$stat
+  if (stat != "identity") {
+    data <- dplyr::rename(data, "y" = !!levels)
+  } else {
+    data <- dplyr::rename(data, "x" = !!values, "y" = !!levels)
+  }
+
+  return(data)
 }
 
 

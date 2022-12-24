@@ -29,15 +29,25 @@ calc_percents <- function(x) {
 }
 
 
-aggregate_data <- function(df, values, levels) {
-  agg <- df |>
-    dplyr::group_by(!!levels) |>
-    dplyr::summarise(x = sum(!!values)) |>
-    dplyr::rename("y" = !!levels)
+aggregate_data <- function(data, values, levels) {
+  data <- group_data(data, levels)
+  agg <- summarise_data(data, values)
+  agg <- rename_columns(agg, levels)
 
   return(agg)
 }
 
+group_data <- function(data, levels) {
+  dplyr::group_by(data, !!levels)
+}
+
+summarise_data <- function(data, values) {
+  dplyr::summarise(data, x = sum(!!values))
+}
+
+rename_columns <- function(data, levels) {
+  dplyr::rename(data, "y" = !!levels)
+}
 
 plot_funnel <- function(data) {
   data |>

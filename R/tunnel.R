@@ -5,53 +5,46 @@ calc_percents <- function(x){
   percents
 }
 
-geom_tunnel <- function(mapping = NULL, data = NULL){
-  mapping
+
+tunnel <- function(df, values, levels) {
+  values <- rlang::enquo(values)
+  levels <- rlang::enquo(levels)
+
+  data <- prepare_data(df, values, levels)
+  plot_tunnel(data)
 }
 
 
-build_grid <- function(y, percents){
-  y <- forcats::fct_reorder(y, percents, .desc = TRUE)
-  # y is the categorical variable
-  data.frame(
-    x = 0,
-    y = y,
-    width = percents
-  )
-}
-
-StatTunnel <- ggplot2::ggproto("StatTunnel", ggplot2::Stat,
-  required_aes = c("x", "y"),
-
-  setup_params = function(data, params) {
-    agg <- aggregate(data$x, list(groups = data$y), sum)
-    top <- max(agg$x, na.rm = TRUE)
-    params$max.value <- top
-    params
-  },
-
-  compute_group = function(data, scales, max.value = 0) {
-    total <- sum(data$x, na.rm = TRUE)
-    percent <- total / max.value
-    data.frame(width = percent, x = 0, y = data$y)
-  }
-
-)
-
-stat_tunnel <- function(mapping = NULL, data = NULL, geom = "tile",
-                        position = "identity", na.rm = FALSE, show.legend = NA,
-                        inherit.aes = TRUE, height = 0.8, ...) {
-  ggplot2::layer(
-    stat = StatTunnel, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, height = height, ...)
-  )
+prepare_data <- function(df, values, levels) {
+  agg <- aggregate_data(df, values, levels)
+  agg <- agg |>
+    dplyr::mutate(width = calc_percents(x)) |>
+    dplyr::select("x", "y", "width")
 }
 
 
+aggregate_data <- function(df, values, levels) {
+  agg <- df |>
+    dplyr::group_by(!!levels) |>
+    dplyr::summarise(x = sum(!!values)) |>
+    dplyr::rename("y" = !!levels)
 
-# aggregates |>
-#   ggplot() +
-#   geom_tile(
-#     aes(x = 0, y = reorder(Step, p), width = p, height = 0.8)
-#   )
+  return(agg)
+}
+
+
+plot_tunnel <- function(data) {
+  data |>
+    ggplot2::ggplot() +
+    ggplot2::geom_tile(
+      ggplot2::aes(
+        x = 0,
+        y = reorder(y, width),
+        width = width,
+        height = 0.8
+      )
+    ) +
+    theme_tunnel()
+}
+
+

@@ -9,18 +9,16 @@ calc_percents <- function(x){
 tunnel <- function(df, values, levels) {
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
+
   data <- prepare_data(df, values, levels)
-  data
+  plot_tunnel(data)
 }
 
 
 prepare_data <- function(df, values, levels) {
   agg <- aggregate_data(df, values, levels)
   agg <- agg |>
-    dplyr::mutate(
-      width = calc_percents(x),
-      y = forcats::fct_reorder(y, width)
-    ) |>
+    dplyr::mutate(width = calc_percents(x)) |>
     dplyr::select("x", "y", "width")
 }
 
@@ -35,10 +33,17 @@ aggregate_data <- function(df, values, levels) {
 }
 
 
+plot_tunnel <- function(data) {
+  data |>
+    ggplot2::ggplot() +
+    ggplot2::geom_tile(
+      ggplot2::aes(
+        x = 0,
+        y = reorder(y, width),
+        width = width,
+        height = 0.8
+      )
+    )
+}
 
 
-# aggregates |>
-#   ggplot() +
-#   geom_tile(
-#     aes(x = 0, y = reorder(Step, p), width = p, height = 0.8)
-#   )

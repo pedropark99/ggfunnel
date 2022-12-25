@@ -9,6 +9,7 @@
 funnel <- function(data, values, levels, stat = "sum", ...) {
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
+  browser()
   stat <- match.arg(stat, c("count", "sum", "identity"))
 
   table_specs <- list(
@@ -45,32 +46,26 @@ rename_columns <- function(data, table_specs) {
 
 plot_funnel <- function(data, ...) {
   plot_specs <- plot_specs(...)
-  geom <- build_geom(plot_specs)
+
   data |>
-    ggplot2::ggplot() +
-    geom +
+    ggplot2::ggplot(ggplot2::aes(
+      x = 0,
+      y = reorder(y, width),
+      width = width
+    )) +
+    build_geom(plot_specs) +
     theme_funnel()
 }
 
 
 
 
-build_aes <- function() {
-  ggplot2::aes(
-    x = 0,
-    y = reorder(y, width),
-    width = width
-  )
-}
+
 
 build_geom <- function(plot_specs) {
-  aes <- build_aes()
   geom <- do.call(
     ggplot2::geom_tile,
-    list(
-      mapping = aes,
-      plot_specs
-    )
+    plot_specs
   )
 
   geom

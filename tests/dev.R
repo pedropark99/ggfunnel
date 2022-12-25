@@ -9,5 +9,13 @@ a <- ggfunnel::intermediate |>
 print(a)
 
 
-ggfunnel:::plot_specs()
-ggfunnel:::plot_specs(teste = 1)
+base <- ggfunnel::aggregates |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = 0,
+      y = reorder(N_users, N_users / max(N_users)),
+      width = N_users / max(N_users))
+  )
+
+geom <- ggplot2::geom_tile(width = 0.8)
+base + geom

@@ -9,10 +9,5 @@ a <- ggfunnel::intermediate |>
 print(a)
 
 
-# b <- ggfunnel::aggregates |>
-#   ggfunnel::funnel(
-#     values = N_users, levels = Step,
-#     stat = "identity"
-#   )
-#
-# print(b)
+ggfunnel:::plot_specs()
+ggfunnel:::plot_specs(teste = 1)

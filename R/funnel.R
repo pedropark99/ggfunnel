@@ -71,7 +71,8 @@ plot_funnel <- function(data, geom_specs, theme) {
       show.legend = geom_specs$show.legend,
       inherit.aes = geom_specs$inherit.aes
     ) +
-    theme_funnel()
+    ggplot2::labs(y = "Levels") +
+    theme_funnel(theme)
 }
 
 

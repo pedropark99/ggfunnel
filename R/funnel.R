@@ -6,17 +6,22 @@
 #'   display in your funnel chart;
 #'
 #' @export
-funnel <- function(data, values, levels, stat = "sum", ...) {
+funnel <- function(data,
+                   values,
+                   levels,
+                   stat = "sum",
+                   geom_specs = list(),
+                   theme = ggplot2::theme()) {
+
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
-  browser()
   stat <- match.arg(stat, c("count", "sum", "identity"))
 
   table_specs <- list(
     values = values, levels = levels, stat = stat
   )
   data <- prepare_data(data, table_specs)
-  plot_funnel(data, ...)
+  plot_funnel(data, geom_specs, theme)
 }
 
 
@@ -44,8 +49,8 @@ rename_columns <- function(data, table_specs) {
 
 
 
-plot_funnel <- function(data, ...) {
-  plot_specs <- plot_specs(...)
+plot_funnel <- function(data, geom_specs, theme) {
+  geom_specs <- geom_specs__(geom_specs)
 
   data |>
     ggplot2::ggplot(ggplot2::aes(
@@ -53,7 +58,19 @@ plot_funnel <- function(data, ...) {
       y = reorder(y, width),
       width = width
     )) +
-    build_geom(plot_specs) +
+    ggplot2::geom_tile(
+      height = geom_specs$height,
+      alpha = geom_specs$alpha,
+      colour = geom_specs$colour,
+      fill = geom_specs$fill,
+      linetype = geom_specs$linetype,
+      stat = geom_specs$stat,
+      position = geom_specs$position,
+      linejoin = geom_specs$linejoin,
+      na.rm = geom_specs$na.rm,
+      show.legend = geom_specs$show.legend,
+      inherit.aes = geom_specs$inherit.aes
+    ) +
     theme_funnel()
 }
 
@@ -62,11 +79,4 @@ plot_funnel <- function(data, ...) {
 
 
 
-build_geom <- function(plot_specs) {
-  geom <- do.call(
-    ggplot2::geom_tile,
-    plot_specs
-  )
 
-  geom
-}

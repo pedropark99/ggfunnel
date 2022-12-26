@@ -1,4 +1,4 @@
-default_geom_specs <- list(
+default_tile_specs <- list(
   alpha = 1,
   colour = "#222222",
   fill = "#222222",
@@ -12,24 +12,46 @@ default_geom_specs <- list(
   inherit.aes = TRUE
 )
 
-get_default_geom_specs <- function() {
-  default_geom_specs
+default_text_specs <- list(
+  stat = "identity",
+  parse = FALSE,
+  nudge_x = 0,
+  nudge_y = 0,
+  alpha = 1,
+  angle = 0,
+  colour = "#969696",
+  family = "sans",
+  fontface = "plain",
+  hjust = 0.5,
+  vjust = 0.5,
+  size = 12 / ggplot2::.pt,
+  check_overlap = FALSE,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+get_default_tile_specs <- function() {
+  default_tile_specs
+}
+
+get_default_text_specs <- function() {
+  default_text_specs
 }
 
 `%notin%` <- function(x, y) {
   ! (x %in% y)
 }
 
-geom_specs__ <- function(specs) {
-  default <- get_default_geom_specs()
+process_specs <- function(specs, defaults) {
   if (length(specs) == 0) {
-    return(default)
+    return(defaults)
   }
-  unrecognized_specs <- names(specs) %notin% names(default)
+  unrecognized_specs <- names(specs) %notin% names(defaults)
   if (any(unrecognized_specs)) {
     report_unrecognized_specs(specs[unrecognized_specs])
   }
-  specs <- list_merge(specs, default)
+  specs <- list_merge(specs, defaults)
   specs
 }
 

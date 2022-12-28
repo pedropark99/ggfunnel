@@ -1,4 +1,4 @@
-#' Plot a Funnel chart
+#' Create an instance of a Funnel chart
 #'
 #' @param data The data.frame with your data;
 #' @param values The column name where are the values you want to display in your funnel chart;
@@ -6,14 +6,7 @@
 #'   display in your funnel chart;
 #'
 #' @export
-funnel <- function(data,
-                   values,
-                   levels,
-                   stat = "sum",
-                   labels = TRUE,
-                   tile_specs = list(),
-                   text_specs = list(),
-                   theme = ggplot2::theme()) {
+ggfunnel <- function(data, values, levels, stat = "sum") {
 
   values <- rlang::enquo(values)
   levels <- rlang::enquo(levels)
@@ -23,7 +16,7 @@ funnel <- function(data,
     values = values, levels = levels, stat = stat
   )
   data <- prepare_data(data, table_specs)
-  plot_funnel(data, labels, tile_specs, text_specs, theme)
+  plot_funnel(data)
 }
 
 
@@ -51,18 +44,7 @@ rename_columns <- function(data, table_specs) {
 
 
 
-plot_funnel <- function(data, labels, tile_specs, text_specs, theme) {
-
-  tile_specs <- process_specs(
-    tile_specs,
-    defaults = get_default_tile_specs()
-  )
-  text_specs <- process_specs(
-    text_specs,
-    defaults = get_default_text_specs()
-  )
-
-
+plot_funnel <- function(data) {
 
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(
@@ -71,6 +53,25 @@ plot_funnel <- function(data, labels, tile_specs, text_specs, theme) {
       width = width,
       label = x
     )) +
+    ggplot2::labs(y = "Levels")
+
+
+  return(plot)
+}
+
+
+
+#' Add a Funnel Geom to an existing ggfunnel plot
+#'
+#' @export
+geom_funnel <- function(plot, geom_specs = list()) {
+
+  tile_specs <- get_default_tile_specs()
+  if (length(geom_specs) > 0) {
+    tile_specs <- process_specs(geom_specs, tile_specs)
+  }
+
+  plot <- plot +
     ggplot2::geom_tile(
       height = tile_specs$height,
       alpha = tile_specs$alpha,
@@ -83,33 +84,7 @@ plot_funnel <- function(data, labels, tile_specs, text_specs, theme) {
       na.rm = tile_specs$na.rm,
       show.legend = tile_specs$show.legend,
       inherit.aes = tile_specs$inherit.aes
-    ) +
-    ggplot2::labs(y = "Levels") +
-    theme_funnel(theme)
-
-
-
-  if (isTRUE(labels)) {
-    plot <- plot +
-      ggplot2::geom_text(
-        stat = text_specs$stat,
-        parse = text_specs$parse,
-        nudge_x = text_specs$nudge_x,
-        nudge_y = text_specs$nudge_y,
-        alpha = text_specs$alpha,
-        angle = text_specs$angle,
-        colour = text_specs$colour,
-        family = text_specs$family,
-        fontface = text_specs$fontface,
-        hjust = text_specs$hjust,
-        vjust = text_specs$vjust,
-        size = text_specs$size,
-        check_overlap = text_specs$check_overlap,
-        na.rm = text_specs$na.rm,
-        show.legend = text_specs$show.legend,
-        inherit.aes = text_specs$inherit.aes
-      )
-  }
+    )
 
 
   return(plot)
@@ -117,7 +92,34 @@ plot_funnel <- function(data, labels, tile_specs, text_specs, theme) {
 
 
 
+geom_text_funnel <- function(plot, geom_specs = list()) {
+  text_specs <- get_default_text_specs()
+  if (length(geom_specs) > 0) {
+    text_specs <- process_specs(geom_specs, text_specs)
+  }
+
+  plot <- plot +
+    ggplot2::geom_text(
+      stat = text_specs$stat,
+      parse = text_specs$parse,
+      nudge_x = text_specs$nudge_x,
+      nudge_y = text_specs$nudge_y,
+      alpha = text_specs$alpha,
+      angle = text_specs$angle,
+      colour = text_specs$colour,
+      family = text_specs$family,
+      fontface = text_specs$fontface,
+      hjust = text_specs$hjust,
+      vjust = text_specs$vjust,
+      size = text_specs$size,
+      check_overlap = text_specs$check_overlap,
+      na.rm = text_specs$na.rm,
+      show.legend = text_specs$show.legend,
+      inherit.aes = text_specs$inherit.aes
+    )
 
 
+  return(plot)
+}
 
 

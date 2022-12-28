@@ -71,3 +71,5 @@ list_merge <- function(x, y) {
 }
 
 
+a$layers[[1]][["stat_params"]]
+

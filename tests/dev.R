@@ -1,10 +1,17 @@
 devtools::load_all()
+library(ggplot2)
 
 a <- ggfunnel::intermediate |>
-  ggfunnel::funnel(
-    values = Counts, levels = Step, tile_specs = list(), labels = TRUE,
-    theme = ggplot2::theme(plot.background = ggplot2::element_rect())
-  )
+  ggfunnel::ggfunnel(
+    values = Counts, levels = Step
+  ) |>
+  ggfunnel::geom_funnel() |>
+  theme_funnel(
+    theme(
+      panel.background = element_rect(fill = "#eb4034")
+    )
+  ) |>
+  geom_text_funnel()
 
 
 print(a)

@@ -16,6 +16,15 @@ a <- ggfunnel::intermediate |>
 
 print(a)
 
+
+### Default funnel chart
+a <- ggfunnel::intermediate |>
+  funnel(
+    values = Counts, levels = Step
+  )
+
+print(a)
+
 #
 # base <- ggfunnel::aggregates |>
 #   ggplot2::ggplot(

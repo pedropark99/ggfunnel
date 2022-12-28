@@ -1,4 +1,27 @@
+#' Plot a Funnel chart
+#'
+#' Plot a funnel chart with the default theme and specs.
+#'
+funnel <- function(data, values, levels, stat = "sum") {
+  values <- rlang::enquo(values)
+  levels <- rlang::enquo(levels)
+  stat <- match.arg(stat, c("count", "sum", "identity"))
+
+  table_specs <- list(
+    values = values, levels = levels, stat = stat
+  )
+  data <- prepare_data(data, table_specs)
+  plot <- build_ggplot_object(data)
+
+  plot |>
+    geom_funnel() +
+    default_theme()
+}
+
+
 #' Create an instance of a Funnel chart
+#'
+#' Useful for users that want finner control over the funnel chart.
 #'
 #' @param data The data.frame with your data;
 #' @param values The column name where are the values you want to display in your funnel chart;
@@ -16,7 +39,9 @@ ggfunnel <- function(data, values, levels, stat = "sum") {
     values = values, levels = levels, stat = stat
   )
   data <- prepare_data(data, table_specs)
-  plot_funnel(data)
+  plot <- build_ggplot_object(data)
+
+  return(plot)
 }
 
 
@@ -42,22 +67,6 @@ rename_columns <- function(data, table_specs) {
   return(data)
 }
 
-
-
-plot_funnel <- function(data) {
-
-  plot <- data |>
-    ggplot2::ggplot(ggplot2::aes(
-      x = 0,
-      y = reorder(y, width),
-      width = width,
-      label = x
-    )) +
-    ggplot2::labs(y = "Levels")
-
-
-  return(plot)
-}
 
 
 
@@ -93,7 +102,7 @@ geom_funnel <- function(plot, geom_specs = list()) {
 
 
 geom_text_funnel <- function(plot, geom_specs = list()) {
-  # text_specs <- get_default_text_specs()
+  text_specs <- get_default_text_specs()
   if (length(geom_specs) > 0) {
     text_specs <- process_specs(geom_specs, text_specs)
   }
@@ -122,4 +131,19 @@ geom_text_funnel <- function(plot, geom_specs = list()) {
   return(plot)
 }
 
+
+
+build_ggplot_object <- function(data) {
+  plot <- data |>
+    ggplot2::ggplot(ggplot2::aes(
+      x = 0,
+      y = reorder(y, width),
+      width = width,
+      label = x
+    )) +
+    ggplot2::labs(y = "Levels")
+
+
+  return(plot)
+}
 

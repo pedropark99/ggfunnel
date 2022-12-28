@@ -2,8 +2,7 @@ devtools::load_all()
 
 a <- ggfunnel::intermediate |>
   ggfunnel::funnel(
-    values = Counts, levels = Step, tile_specs = list(),
-    text_specs = list(family = "serif", colour = "white", size = 12),
+    values = Counts, levels = Step, tile_specs = list(), labels = TRUE,
     theme = ggplot2::theme(plot.background = ggplot2::element_rect())
   )
 

@@ -93,7 +93,7 @@ geom_funnel <- function(plot, geom_specs = list()) {
 
 
 geom_text_funnel <- function(plot, geom_specs = list()) {
-  text_specs <- get_default_text_specs()
+  # text_specs <- get_default_text_specs()
   if (length(geom_specs) > 0) {
     text_specs <- process_specs(geom_specs, text_specs)
   }

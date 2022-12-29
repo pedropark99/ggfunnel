@@ -58,10 +58,14 @@ rename_columns <- function(data, table_specs) {
   levels <- table_specs$levels
   values <- table_specs$values
   stat <- table_specs$stat
-  if (stat != "identity") {
+  if (stat == "sum") {
     data <- dplyr::rename(data, "y" = !!levels)
-  } else {
+  }
+  if (stat == "identity") {
     data <- dplyr::rename(data, "x" = !!values, "y" = !!levels)
+  }
+  if (stat == "count") {
+    data <- dplyr::rename(data, "x" = n, "y" = !!levels)
   }
 
   return(data)

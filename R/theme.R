@@ -5,7 +5,7 @@ default_theme <- function(){
         angle = 90,
         margin = ggplot2::margin(r = 10)
       ),
-      axis.text.y = ggplot2::element_text()
+      axis.text.y = ggplot2::element_text(hjust = 1)
     )
 }
 

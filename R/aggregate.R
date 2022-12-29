@@ -10,17 +10,20 @@ group_data <- function(data, table_specs) {
 }
 
 summarise_data <- function(data, table_specs) {
+  levels <- table_specs$levels
   values <- table_specs$values
-  fun <- get_agg_function(table_specs)
-  dplyr::summarise(data, x = fun(!!values))
+  if (stat == "sum") {
+    result <- dplyr::summarise(data, x = sum(!!values))
+  }
+  if (stat == "count") {
+    result <- data |>
+      dplyr::count(levels)
+  }
+
+  return(result)
 }
 
-get_agg_function <- function(table_specs) {
-  switch (table_specs$stat,
-    "count" = dplyr::count,
-    "sum" = sum
-  )
-}
+
 
 
 calc_percents <- function(data) {

@@ -67,9 +67,10 @@ user_events <- tibble(
   select(
     starts_with("Date"),
     everything()
-  )
+  ) |>
+  filter(!is.na(Event))
 
 
 
 
-usethis::use_data(user_events)
+usethis::use_data(user_events, overwrite = TRUE)

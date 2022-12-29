@@ -70,6 +70,3 @@ list_merge <- function(x, y) {
   all[keys]
 }
 
-
-a$layers[[1]][["stat_params"]]
-

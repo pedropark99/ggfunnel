@@ -2,7 +2,7 @@ library(hexSticker)
 devtools::load_all()
 
 
-funnel(user_events, levels = Event, values = Event, stat = "count")
+funnel(intermediate, levels = Step, values = Counts, stat = "sum")
 
 
 user_events |>

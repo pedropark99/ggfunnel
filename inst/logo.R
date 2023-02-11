@@ -3,6 +3,26 @@ library(ggplot2)
 library(hexSticker)
 
 
-s <- sticker(~plot(cars, cex=.5, cex.axis=.5, mgp=c(0,.3,0), xlab="", ylab=""),
-             package="hexSticker", p_size=20, s_x=.8, s_y=.6, s_width=1.4, s_height=1.2,
-             filename="inst/figures/baseplot.png")
+print(ggfunnel::aggregates)
+# Ploting a funne chart that shows the distribution of users
+# across the different "steps".
+plot <- ggfunnel::aggregates |>
+  ggfunnel::funnel(
+    values = N_users, levels = Step,
+    labels = FALSE,
+    tile_specs = list(fill = "#2684ff")
+  )
+
+plot <- plot + theme_void()
+
+
+s <- sticker(
+  plot, package="ggfunnel",
+  p_size=20, p_y = 1.5,
+  s_width=1.5, s_height=1, s_x = 1,
+  h_fill = "#222222",
+  h_color = "#2684ff",
+  filename="inst/ggfunnel-logo.png"
+)
+
+print(s)

@@ -10,7 +10,7 @@
 #' present at \code{ggfunnel::default_tile_specs}.
 #'
 #' You can change these values by using the \code{tile_specs} argument of \code{ggfunnel::funnel()}.
-#'
+#' @export
 default_tile_specs <- list(
   alpha = 1,
   colour = "#222222",
@@ -38,7 +38,7 @@ default_tile_specs <- list(
 #' present at \code{ggfunnel::default_text_specs}.
 #'
 #' You can change these values by using the \code{text_specs} argument of \code{ggfunnel::funnel()}.
-#'
+#' @export
 default_text_specs <- list(
   stat = "identity",
   parse = FALSE,

@@ -62,6 +62,8 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Building a funnel chart, and customizing its output</h1>
+                        <h4 data-toc-skip class="author">Pedro Duarte
+Faria</h4>
             
       
       
@@ -70,12 +72,319 @@
 
     
     
-<p>All rectangles are centered at 0 in the x axis and uses the same
-height ratio. But their widths vary depending on the percentage their
-represent to the max value in the</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>The <code>ggfunnel</code> package uses <code>ggplot2</code> to build
+a Power BI like funnel chart. The main functionality of the package is
+available trough the <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> function. You just
+give the <code>data.frame</code> with your data to the function, and
+specify which are the columns for the levels and the values of the
+funnel chart. The <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> function will do the
+rest for you:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ggfunnel</span><span class="op">)</span></span></code></pre></div>
-  </main>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ggfunnel</span><span class="op">)</span></span>
+<span><span class="co"># Using the `ggfunnel::aggregates` data.frame as example:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Step N_users</span></span>
+<span><span class="co">#&gt; 1    A    4389</span></span>
+<span><span class="co">#&gt; 2    B    3100</span></span>
+<span><span class="co">#&gt; 3    C    2005</span></span>
+<span><span class="co">#&gt; 4    D     500</span></span>
+<span><span class="co">#&gt; 5    E     120</span></span>
+<span><span class="co"># Ploting a funne chart that shows the distribution of users</span></span>
+<span><span class="co"># across the different "steps".</span></span>
+<span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="how-it-works">How it works ?<a class="anchor" aria-label="anchor" href="#how-it-works"></a>
+</h2>
+<p>In essence, the <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> function uses the
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">ggplot2::geom_tile()</a></code> geom from <code>ggplot2</code> to draw
+the rectangles that composes the funnel chart. Optionally (depending on
+the value of the <code>labels</code> argument), the function will use
+the <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">ggplot2::geom_text()</a></code> geom as well to draw the labels of
+the plot.</p>
+<p>All rectangles drawn by <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">ggplot2::geom_tile()</a></code>, are
+centered at a fixed point of the x axis (usually at zero) and uses the
+same height ratio (which currently is 0.8 as default). But their widths
+vary depending on the percentage their represent to the max value in the
+funnel.</p>
+<p>In other words, if we take the 3100 value from the plot of the
+previous example, this 3100 is approximately 70% of the maximum value
+found in the set (which is 4389). As a result, the width of the
+rectangle that represents this 3100 value is approximately 0.7.</p>
+<p>The maximum value in the set is always the top rectangle in the
+funnel, and the minimum value on the set is always at the bottom
+rectangle of the funnel. Since the top rectangle in the funnel represent
+the maximum value in the set, his width is always 1, because its value
+represents 100% of the maximum value in the set.</p>
+<p>Therefore, the widths of each rectangle are the percentage of the
+value they represent to the maximum value of the set.</p>
+</div>
+<div class="section level2">
+<h2 id="using-the-stat-argument-to-aggregate-data">Using the <code>stat</code> argument to aggregate data<a class="anchor" aria-label="anchor" href="#using-the-stat-argument-to-aggregate-data"></a>
+</h2>
+<p>By default, <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> will always try to
+aggregate the data you deliver. But you can use the <code>stat</code>
+argument to change this behaviour.</p>
+<p>Lets take the <code>df</code> object below as an example:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  letter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span>,</span>
+<span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">320</span><span class="op">:</span><span class="fl">5400</span>, size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span></span>
+<span><span class="co">#&gt;   letter value</span></span>
+<span><span class="co">#&gt; 1      A  4910</span></span>
+<span><span class="co">#&gt; 2      A  2017</span></span>
+<span><span class="co">#&gt; 3      A  4592</span></span>
+<span><span class="co">#&gt; 4      B   580</span></span>
+<span><span class="co">#&gt; 5      C  4398</span></span>
+<span><span class="co">#&gt; 6      C  1706</span></span>
+<span><span class="co">#&gt; 7      D   915</span></span></code></pre></div>
+<p>The <code>letter</code> column is clearly a kind of categorical data,
+and the <code>value</code> column contains numerical data that we might
+want to visualize in a funnel chart. When you give this <code>df</code>
+object, as is, to <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code>, two things happens to
+the <code>df</code> object before it is shipped to
+<code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code>, to start the <code>ggplot2</code>
+chart:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>  <span class="va">df</span>, levels <span class="op">=</span> <span class="va">letter</span>, values <span class="op">=</span> <span class="va">value</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p>First, <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> will group the data inside the
+<code>df</code> object by using <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by()</a></code>. The data
+is always grouped by using the column that you gave at the
+<code>levels</code> argument. In other words, the data is always grouped
+by using the categorical data you want to use in the funnel chart.</p>
+<p>Second, after it grouped the given <code>data.frame</code>,
+<code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> will aggregate your data using
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">dplyr::summarise()</a></code>. The operation applied inside the
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">dplyr::summarise()</a></code> function depends on the value you
+configured at the <code>stat</code> argument. The <code>stat</code>
+argument accepts three string values, which are:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>"sum"</code>: the default, aggregates the data by summing the
+<code>values</code> column;</li>
+<li>
+<code>"count"</code>: aggregates the data by counting the number of
+rows for each value at <code>levels</code> column;</li>
+<li>
+<code>"identity"</code>: do not aggregate the data, and just
+interpret the data as is;</li>
+</ol>
+<p>By default, <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> uses the
+<code>"sum"</code> value at the <code>stat</code> argument, which means
+that it applies the <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> function over the column you gave
+at the <code>values</code> argument. In other words, it applies the
+<code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> function over the numerical data you want to present
+in the funnel chart.</p>
+<p>Having this in mind, the resulting aggregated data from the
+<code>df</code> object that is used in the plot, is:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">letter</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">#&gt;   letter value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> A      <span style="text-decoration: underline;">11</span>519</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> B        580</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> C       <span style="text-decoration: underline;">6</span>104</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> D        915</span></span></code></pre></div>
+<p>This <code>data.frame</code> above is the data that is used to build
+the funnel chart, not the original <code>df</code> object.</p>
+<p>The <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> function is designed to do all of
+this work, because a funnel chart is a chart to visualize aggregated
+data. In other words, funnel charts are not commonly used to visualize
+raw data, or, lots of observations at the same time. So, if you deliver
+raw data to <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> it will try to aggregate
+your data by default.</p>
+<p>However, although this is a useful feature, you might want to
+suppress it. In other words, you might already have aggregated data
+inside your <code>data.frame</code>, and, you just want to visualize
+them in a funnel chart, without aggregating it again.</p>
+<p>To use your data, as is, in the funnel chart, you just need to set
+the <code>stat</code> argument to <code>"identity"</code>
+(<code>stat = "identity"</code>). This way,
+<code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> understands that you already have an
+aggregated dataset, and, therefore, that it needs no further
+transformations.</p>
+</div>
+<div class="section level2">
+<h2 id="how-to-customize-the-output">How to customize the output ?<a class="anchor" aria-label="anchor" href="#how-to-customize-the-output"></a>
+</h2>
+<p><code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> uses a default theme and
+specifications in the resulting plot. But you might want to customize
+some aspects of the output. In this case, you can use the
+<code>tile_specs</code>, <code>text_specs</code> and <code>theme</code>
+arguments of <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> to apply these
+customizations.</p>
+<div class="section level3">
+<h3 id="customizing-the-rectangles">Customizing the rectangles<a class="anchor" aria-label="anchor" href="#customizing-the-rectangles"></a>
+</h3>
+<p>If you want to change the aspects of the rectangles that form the
+funnel chart, than, this means you want to change the specifications of
+the <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">ggplot2::geom_tile()</a></code> used to build the chart.</p>
+<p>For example, a very commom you might want to change in these
+rectangles is the filling color or them. To do this, you must use the
+<code>tile_specs</code> argument of <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code>. You
+give a list with the new color you want to apply on the
+<code>fill</code> element, like in the example below:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span>,</span>
+<span>    tile_specs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"#eb4034"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p>This new color will be passed to the <code>fill</code> argument of
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">ggplot2::geom_tile()</a></code>. This means that you change the
+default value associated with any argument of
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">ggplot2::geom_tile()</a></code> with this list given to
+<code>tile_specs</code>.</p>
+<p>As another example, I could change the heights and the contour color
+of all rectangles by setting the <code>height</code> and
+<code>colour</code> elements of the list. Like this:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span>,</span>
+<span>    tile_specs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      fill <span class="op">=</span> <span class="st">"#eb4034"</span>,</span>
+<span>      height <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>      colour <span class="op">=</span> <span class="st">"blue"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="customizing-the-labels">Customizing the labels<a class="anchor" aria-label="anchor" href="#customizing-the-labels"></a>
+</h3>
+<p>You can also customize the labels used in the plot. You just to
+follow the exact same process you did to customize the
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">ggplot2::geom_tile()</a></code> used in the plot. That is, you give to
+the <code>text_specs</code> argument a list with the new values you want
+to use at any argument of the <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">ggplot2::geom_text()</a></code>.</p>
+<p>For example, I could change the size, color and the font used in the
+labels by setting the <code>size</code>, <code>colour</code> and
+<code>family</code> elements of the list, like this:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span>,</span>
+<span>    text_specs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      colour <span class="op">=</span> <span class="st">"#eb4034"</span>,</span>
+<span>      family <span class="op">=</span> <span class="st">"serif"</span>,</span>
+<span>      size <span class="op">=</span> <span class="fl">10</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p>A common tweak you might want to make to the plot, is to nudge some
+labels to the right, or to the left, by a specific amount. To do this,
+you give a vector to the <code>nudge_x</code> element of the list. Each
+element of this vector is a offset value to be added to the position of
+each label. In the example below, I am nudging only the last label to
+the right (use a negative offset value to nudge the label to the
+left).</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span>,</span>
+<span>    text_specs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      colour <span class="op">=</span> <span class="st">"#eb4034"</span>,</span>
+<span>      nudge_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, <span class="fl">0.1</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p>Another thing you might want to do, is to apply a specific color at
+some labels, and, apply another color at the other set of labels. For
+this, you take a similar approach to the above example, and, give a
+vector to the <code>colour</code> element of the list you provided to
+<code>text_specs</code>. In the example below, I am coloring all labels
+of white, except the last one, which is now black.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span>,</span>
+<span>    text_specs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      nudge_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
+<span>      colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"white"</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, <span class="st">"black"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="adding-more-elements-to-the-plot">Adding more elements to the plot<a class="anchor" aria-label="anchor" href="#adding-more-elements-to-the-plot"></a>
+</h3>
+<p>Since <code><a href="../reference/funnel.html">ggfunnel::funnel()</a></code> returns as output, the raw
+<code>ggplot</code> object that describes the funnel chart, you can also
+add much more content to the plot by adding new geoms, themes, titles
+and scales, as you would normally do with any other kind of
+<code>ggplot2</code> plot.</p>
+<p>In the example below, we are adding title and subtitle to the plot,
+adjusting the theme, and adding some notes and arrows to emphasize some
+parts of the plot.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="../reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span>,</span>
+<span>    text_specs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      nudge_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
+<span>      colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"white"</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, <span class="st">"black"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">note</span> <span class="op">&lt;-</span> <span class="st">"We lost **75% of the users**&lt;br&gt;from step \"C\" to step \"D\""</span></span>
+<span></span>
+<span><span class="va">plot</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Funnel of users in each step of the sales path"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"The biggest loss of users is at the \"D\" step"</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    plot.title <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>    plot.title.position <span class="op">=</span> <span class="st">"plot"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggtext</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/ggtext/reference/geom_richtext.html" class="external-link">geom_richtext</a></span><span class="op">(</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.35</span>, y <span class="op">=</span> <span class="st">"D"</span>,</span>
+<span>    label <span class="op">=</span> <span class="va">note</span><span class="op">)</span>,</span>
+<span>    label.color <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.17</span>, xend <span class="op">=</span> <span class="fl">0.07</span>, y <span class="op">=</span> <span class="st">"D"</span>, yend <span class="op">=</span> <span class="st">"D"</span><span class="op">)</span>, </span>
+<span>    arrow <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/arrow.html" class="external-link">arrow</a></span><span class="op">(</span></span>
+<span>      length <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="st">"cm"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="funnel_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

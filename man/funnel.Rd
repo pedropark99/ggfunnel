@@ -18,10 +18,12 @@ funnel(
 \arguments{
 \item{data}{The \code{data.frame} with your data;}
 
-\item{values}{The column name where are the values you want to display in your funnel chart;}
+\item{values}{The column name where are the values you want to display in your funnel chart.
+In other words, the numerical data that you want to visualize in the chart;}
 
 \item{levels}{The column name with the "levels" (or the "groups") you want to
-display in your funnel chart;}
+display in your funnel chart. In other words, the categorical data that
+identifies each level in the funnel;}
 
 \item{stat}{A string with the stat you want to use to aggregate the data.
 Defaults to \code{"sum"}.}
@@ -68,8 +70,13 @@ use \code{sum()} or \code{dplyr::count()} to aggregate your data. Use \code{stat
 for numeric data, and \code{stat = "count"} for categorical data.
 Use \code{stat = "identity"} if your data is already aggregated, and you just want to
 print the values you have.
+
+By default, \code{ggfunnel::funnel()} uses \code{labels = TRUE}, which includes the value labels in the resulting plot.
+But if you use \code{labels = FALSE}, the value labels are suppressed, and, as consequence,
+the \code{ggplot2::geom_text()} geom is not added to the plot.
 }
 \examples{
+library(ggfunnel)
 # Using the `ggfunnel::aggregates` data.frame as example:
 print(ggfunnel::aggregates)
 # Ploting a funne chart that shows the distribution of users

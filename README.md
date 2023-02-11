@@ -5,6 +5,7 @@ like funnel charts in R. `ggfunnel::funnel()` is the main function of
 the package, responsible for producing the plot. The basic example below
 will produce the following plot:
 
+    ```r
     library(ggfunnel)
     plot <- ggfunnel::aggregates |>
       ggfunnel::funnel(
@@ -12,5 +13,6 @@ will produce the following plot:
       )
 
     print(plot)
+    ```
 
-![](README_files/figure-markdown_strict/unnamed-chunk-1-1.png)
+![](inst/example1.png)

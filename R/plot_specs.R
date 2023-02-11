@@ -1,3 +1,16 @@
+#' Default specifications for the \code{ggplot2::geom_tile()} geom
+#'
+#' \code{ggfunnel::default_tile_specs} store the list of default values
+#' used at the \code{ggplot2::geom_tile()} geom arguments.
+#'
+#' @details
+#' \code{ggfunnel::funnel()} uses the
+#' \code{ggplot2::geom_tile()} geom to build the rectangles present in the funnel chart,
+#' and will fill all arguments of \code{ggplot2::geom_tile()} geom with the values
+#' present at \code{ggfunnel::default_tile_specs}.
+#'
+#' You can change these values by using the \code{tile_specs} argument of \code{ggfunnel::funnel()}.
+#'
 default_tile_specs <- list(
   alpha = 1,
   colour = "#222222",
@@ -12,6 +25,20 @@ default_tile_specs <- list(
   inherit.aes = TRUE
 )
 
+
+#' Default specifications for the \code{ggplot2::geom_text()} geom
+#'
+#' \code{ggfunnel::default_text_specs} store the list of default values
+#' used at the \code{ggplot2::geom_text()} geom arguments.
+#'
+#' @details
+#' If the argument \code{labels} of \code{ggfunnel::funnel()} is set to \code{TRUE}, than,
+#' the \code{ggplot2::geom_text()} geom will be used to print the value labels in the funnel chart.
+#' \code{ggfunnel::funnel()} will fill all arguments of \code{ggplot2::geom_text()} geom with the values
+#' present at \code{ggfunnel::default_text_specs}.
+#'
+#' You can change these values by using the \code{text_specs} argument of \code{ggfunnel::funnel()}.
+#'
 default_text_specs <- list(
   stat = "identity",
   parse = FALSE,

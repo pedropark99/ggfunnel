@@ -40,12 +40,11 @@ theme of the chart.}
 }
 \description{
 This function will do its best to build a Power BI like funnel chart.
-}
-\details{
 This function outputs the raw \code{ggplot} object that describes the funnel chart.
 As a consequence, you have to explicit call the object produced, or, use
 functions like \code{print()} to visualize the chart.
-
+}
+\details{
 In essence, \code{ggfunnel::funnel()} uses the \code{ggplot2::geom_tile()} geom to
 build the funnel chart. Since this is a best attempt, this function also gives you freedom to
 change the specifications of the geoms of the plot, in case it does not

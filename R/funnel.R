@@ -1,12 +1,12 @@
 #' Build a Power BI like funnel chart.
 #'
 #' This function will do its best to build a Power BI like funnel chart.
-#' @export
-#' @details
-#'
 #' This function outputs the raw \code{ggplot} object that describes the funnel chart.
 #' As a consequence, you have to explicit call the object produced, or, use
 #' functions like \code{print()} to visualize the chart.
+#'
+#' @export
+#' @details
 #'
 #' In essence, \code{ggfunnel::funnel()} uses the \code{ggplot2::geom_tile()} geom to
 #' build the funnel chart. Since this is a best attempt, this function also gives you freedom to
@@ -28,7 +28,7 @@
 #' Use \code{stat = "identity"} if your data is already aggregated, and you just want to
 #' print the values you have.
 #'
-#' @param data The `data.frame` with your data;
+#' @param data The \code{data.frame} with your data;
 #' @param values The column name where are the values you want to display in your funnel chart;
 #' @param levels The column name with the "levels" (or the "groups") you want to
 #'   display in your funnel chart;
@@ -44,6 +44,10 @@
 #'   theme of the chart.
 #'
 #' @examples
+#' # Using the `ggfunnel::aggregates` data.frame as example:
+#' print(ggfunnel::aggregates)
+#' # Ploting a funne chart that shows the distribution of users
+#' # across the different "steps".
 #' plot <- ggfunnel::aggregates |>
 #' ggfunnel::funnel(
 #'   values = N_users, levels = Step

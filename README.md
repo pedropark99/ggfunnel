@@ -3,7 +3,8 @@
 ## Overview
 
 `{ggfunnel}` is a R package that uses `{ggplot2}` to create Power BI
-# like funnel charts in R.
+like funnel charts in R. We give below a very basic example, but, if you want to know 
+more details about the package, and how it works, I recommend you to see `vignette("funnel")`.
 
 
 ## A basic example of use
@@ -48,7 +49,7 @@ print(plot)
 
 ## A simple (but far from perfect) approach
 
-`{ggfunnel}` is kind of a experimental package, and it is far from perfect. As a result, it does not contain all you might want/need for building a funnel chart. 
+`{ggfunnel}` is kind of a experimental package, and it is far from perfect. As a result, it does not contain all things you might want/need for building a funnel chart. 
 
 This means that, currently, `{ggfunnel}` gives you the minimal code necessary to produce a decent funnel chart. But it does give much more functionality than that. It also makes some assumptions about your data that might not hold, and it does not contain some features that you might find at Power BI (e.g. percentage labels).
 

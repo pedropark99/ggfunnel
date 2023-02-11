@@ -65,7 +65,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p><code>{ggfunnel}</code> is a R package that uses <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> to create Power BI # like funnel charts in R.</p>
+<p><code>{ggfunnel}</code> is a R package that uses <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> to create Power BI like funnel charts in R. We give below a very basic example, but, if you want to know more details about the package, and how it works, I recommend you to see <code><a href="articles/funnel.html">vignette("funnel")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="a-basic-example-of-use">A basic example of use<a class="anchor" aria-label="anchor" href="#a-basic-example-of-use"></a>
@@ -105,7 +105,7 @@
 <div class="section level2">
 <h2 id="a-simple-but-far-from-perfect-approach">A simple (but far from perfect) approach<a class="anchor" aria-label="anchor" href="#a-simple-but-far-from-perfect-approach"></a>
 </h2>
-<p><code>{ggfunnel}</code> is kind of a experimental package, and it is far from perfect. As a result, it does not contain all you might want/need for building a funnel chart.</p>
+<p><code>{ggfunnel}</code> is kind of a experimental package, and it is far from perfect. As a result, it does not contain all things you might want/need for building a funnel chart.</p>
 <p>This means that, currently, <code>{ggfunnel}</code> gives you the minimal code necessary to produce a decent funnel chart. But it does give much more functionality than that. It also makes some assumptions about your data that might not hold, and it does not contain some features that you might find at Power BI (e.g. percentage labels).</p>
 <p>But, even being a very simple package, <code><a href="reference/funnel.html">ggfunnel::funnel()</a></code> always returns the raw <code>ggplot</code> object that describes the funnel chart. This means that the package gives you a lot of freedom to customize (or to complement) the output in the way you might need (see <code><a href="articles/funnel.html">vignette("funnel")</a></code> for more details on how to customize/complement the <code><a href="reference/funnel.html">ggfunnel::funnel()</a></code> output).</p>
 <p>However, the package needs some work to be a more robust and complete piece of code, for sure. If you think you can make <code>{ggfunnel}</code> better I would be happy to review a PR from you!</p>

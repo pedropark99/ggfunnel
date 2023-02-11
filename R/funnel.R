@@ -1,11 +1,55 @@
-#' Plot a Funnel chart
+#' Build a Power BI like funnel chart.
 #'
-#' @param data The data.frame with your data;
+#' This function will do its best to build a Power BI like funnel chart.
+#' @export
+#' @details
+#'
+#' This function outputs the raw \code{ggplot} object that describes the funnel chart.
+#' As a consequence, you have to explicit call the object produced, or, use
+#' functions like \code{print()} to visualize the chart.
+#'
+#' In essence, \code{ggfunnel::funnel()} uses the \code{ggplot2::geom_tile()} geom to
+#' build the funnel chart. Since this is a best attempt, this function also gives you freedom to
+#' change the specifications of the geoms of the plot, in case it does not
+#' perform well. You can change these specifications
+#' by using the \code{tile_specs} and \code{text_specs} arguments.
+#'
+#' These arguments accepts a list with key-value pairs. In each key-value pair
+#' you can define the value you want to use in a specific option/argument of the \code{ggplot2::geom_tile()}
+#' and \code{ggplot2::geom_text()} geoms, respectively.
+#'
+#' You can also change the theme of the chart by giving a \code{ggplot2::theme} object
+#' to the \code{theme} argument.
+#'
+#' The \code{stat} argument controls whether you want to aggregate or not your data.
+#' If \code{stat = "sum"} or \code{stat = "count"}, \code{ggfunnel::funnel()} will
+#' use \code{sum()} or \code{dplyr::count()} to aggregate your data. Use \code{stat = "sum"}
+#' for numeric data, and \code{stat = "count"} for categorical data.
+#' Use \code{stat = "identity"} if your data is already aggregated, and you just want to
+#' print the values you have.
+#'
+#' @param data The `data.frame` with your data;
 #' @param values The column name where are the values you want to display in your funnel chart;
 #' @param levels The column name with the "levels" (or the "groups") you want to
 #'   display in your funnel chart;
+#' @param stat A string with the stat you want to use to aggregate the data.
+#'   Defaults to \code{"sum"}.
+#' @param labels Use \code{ggplot2::geom_text()} to add labels to each rectangle in the chart.
+#'   Defaults to \code{TRUE}.
+#' @param tile_specs A list with the values to be used in the options/arguments of the
+#'   \code{ggplot2::geom_tile()} geom.
+#' @param text_specs A list with the values to be used in the options/arguments of the
+#'   \code{ggplot2::text_specs()} geom.
+#' @param theme Accepts a \code{ggplot2::theme} object from the user to customize the
+#'   theme of the chart.
 #'
-#' @export
+#' @examples
+#' plot <- ggfunnel::aggregates |>
+#' ggfunnel::funnel(
+#'   values = N_users, levels = Step
+#' )
+#'
+#' print(plot)
 funnel <- function(data,
                    values,
                    levels,

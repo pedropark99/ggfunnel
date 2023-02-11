@@ -15,6 +15,7 @@ summarise_data <- function(data, table_specs) {
   dplyr::summarise(data, x = fun(!!values))
 }
 
+
 get_agg_function <- function(table_specs) {
   switch (table_specs$stat,
     "count" = dplyr::count,

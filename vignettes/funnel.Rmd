@@ -1,0 +1,23 @@
+---
+title: "Building a funnel chart, and customizing its output"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Building a funnel chart, and customizing its output}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+All rectangles are centered at 0 in the x axis and uses the
+same height ratio. But their widths vary depending on the percentage their represent
+to the max value in the
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggfunnel)
+```

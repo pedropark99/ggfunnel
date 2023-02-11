@@ -1,4 +1,6 @@
-# `ggfunnel`
+# `ggfunnel` <img src="inst/ggfunnel-logo.png" style="height:200px" align="right" />
+
+## Overview
 
 `{ggfunnel}` is a R package that uses `{ggplot2}` to create Power BI
 like funnel charts in R. `ggfunnel::funnel()` is the main function of

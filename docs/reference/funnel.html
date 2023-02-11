@@ -72,7 +72,7 @@ functions like <code><a href="https://rdrr.io/r/base/print.html" class="external
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
-<dd><p>The `data.frame` with your data;</p></dd>
+<dd><p>The <code>data.frame</code> with your data;</p></dd>
 
 
 <dt>values</dt>
@@ -119,8 +119,11 @@ by using the <code>tile_specs</code> and <code>text_specs</code> arguments.</p>
 <p>These arguments accepts a list with key-value pairs. In each key-value pair
 you can define the value you want to use in a specific option/argument of the <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">ggplot2::geom_tile()</a></code>
 and <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">ggplot2::geom_text()</a></code> geoms, respectively.</p>
-<p>You can also change the theme of the chart by giving a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2::theme</a></code> object
-to the <code>theme</code> argument.</p>
+<p>You can see the available argument/options that you can set at <code>tile_specs</code> and <code>text_specs</code>
+by checking the result of <code>names(ggfunnel::default_tile_specs)</code> and <code>names(ggfunnel::default_text_specs)</code>,
+respectively.</p>
+<p>You can also change the theme elements of the chart by giving a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2::theme</a></code> object
+to the <code>theme</code> argument, with the desired specifications.</p>
 <p>The <code>stat</code> argument controls whether you want to aggregate or not your data.
 If <code>stat = "sum"</code> or <code>stat = "count"</code>, <code>ggfunnel::funnel()</code> will
 use <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">dplyr::count()</a></code> to aggregate your data. Use <code>stat = "sum"</code>
@@ -131,7 +134,19 @@ print the values you have.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Using the `ggfunnel::aggregates` data.frame as example:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Step  N_users</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A        <span style="text-decoration: underline;">4</span>389</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> B        <span style="text-decoration: underline;">3</span>100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> C        <span style="text-decoration: underline;">2</span>005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> D         500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> E         120</span>
+<span class="r-in"><span><span class="co"># Ploting a funne chart that shows the distribution of users</span></span></span>
+<span class="r-in"><span><span class="co"># across the different "steps".</span></span></span>
+<span class="r-in"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span><span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu">funnel</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

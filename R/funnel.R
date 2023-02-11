@@ -18,8 +18,12 @@
 #' you can define the value you want to use in a specific option/argument of the \code{ggplot2::geom_tile()}
 #' and \code{ggplot2::geom_text()} geoms, respectively.
 #'
-#' You can also change the theme of the chart by giving a \code{ggplot2::theme} object
-#' to the \code{theme} argument.
+#' You can see the available argument/options that you can set at \code{tile_specs} and \code{text_specs}
+#' by checking the result of \code{names(ggfunnel::default_tile_specs)} and \code{names(ggfunnel::default_text_specs)},
+#' respectively.
+#'
+#' You can also change the theme elements of the chart by giving a \code{ggplot2::theme} object
+#' to the \code{theme} argument, with the desired specifications.
 #'
 #' The \code{stat} argument controls whether you want to aggregate or not your data.
 #' If \code{stat = "sum"} or \code{stat = "count"}, \code{ggfunnel::funnel()} will

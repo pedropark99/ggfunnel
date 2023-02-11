@@ -63,12 +63,15 @@
 <code>ggfunnel</code><a class="anchor" aria-label="anchor" href="#ggfunnel"></a>
 </h1></div>
 <p><code>{ggfunnel}</code> is a R package that uses <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> to create Power BI like funnel charts in R. <code><a href="reference/funnel.html">ggfunnel::funnel()</a></code> is the main function of the package, responsible for producing the plot. The basic example below will produce the following plot:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> ggfunnel<span class="sc">::</span>aggregates <span class="sc">|&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  ggfunnel<span class="sc">::</span><span class="fu">funnel</span>(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> N_users, <span class="at">levels =</span> Step</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ggfunnel</span><span class="op">)</span></span>
+<span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plot</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inst/example1.png"></p>
 </div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>

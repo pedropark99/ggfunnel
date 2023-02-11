@@ -70,7 +70,7 @@
 <div class="section level2">
 <h2 id="a-basic-example-of-use">A basic example of use<a class="anchor" aria-label="anchor" href="#a-basic-example-of-use"></a>
 </h2>
-<p>The main functionality of the package is available at the <code><a href="reference/funnel.html">ggfunnel::funnel()</a></code> function. It is responsible for producing the plot, and you usually define 3 arguments in this function, which are:</p>
+<p>The main functionality of the package is available trough the <code><a href="reference/funnel.html">ggfunnel::funnel()</a></code> function. It is responsible for producing the plot, and you usually define 3 arguments in this function, which are:</p>
 <ul>
 <li>
 <code>data</code>: the data.frame with the data you want to use in the plot;</li>
@@ -79,7 +79,7 @@
 <li>
 <code>levels</code>: the column name with the “levels” (or the “groups”) you want to display in your funnel chart. In other words, the categorical data that identifies each level in the funnel;</li>
 </ul>
-<p>Lets take the <code>ggfunnel::aggregates</code> data.frame as an example:</p>
+<p>In the example below, we are using the <code>ggfunnel::aggregates</code> data.frame to build a basic funnel chart:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span></span></code></pre></div>
 <pre><code># A tibble: 5 × 2
@@ -90,12 +90,12 @@
 3 C        2005
 4 D         500
 5 E         120</code></pre>
-<p>In the example below, we are using the data stored at <code>ggfunnel::aggregates</code> to build a basic funnel chart. The <code>N_users</code> column is the column with numerical data, so I give it to the <code>values</code> argument of the function. This way, these values will be used to determine the widths of each rectangle in the funnel chart.</p>
+<p>The <code>N_users</code> column is the column with numerical data, so I give it to the <code>values</code> argument of the function. This way, these values will be used to determine the widths of each rectangle in the funnel chart.</p>
 <p>In contrast, the <code>Step</code> column contains the categorical data of the dataset. That is why I gave this column to the <code>levels</code> argument of the function. As a result, the values of this column will be used to determine the “levels” of the funnel chart.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ggfunnel</span><span class="op">)</span></span>
-<span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="fu"><a href="reference/funnel.html">funnel</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="fu">ggfunnel</span><span class="fu">::</span><span class="va">aggregates</span>,</span>
 <span>    values <span class="op">=</span> <span class="va">N_users</span>, levels <span class="op">=</span> <span class="va">Step</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>

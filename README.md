@@ -9,13 +9,13 @@ more details about the package, and how it works, I recommend you to see `vignet
 
 ## A basic example of use
 
-The main functionality of the package is available at the `ggfunnel::funnel()` function. It is responsible for producing the plot, and you usually define 3 arguments in this function, which are:
+The main functionality of the package is available trough the `ggfunnel::funnel()` function. It is responsible for producing the plot, and you usually define 3 arguments in this function, which are:
 
 - `data`: the data.frame with the data you want to use in the plot;
 - `values`: the column name where are the values you want to display in your funnel chart. In other words, the numerical data that you want to visualize in the chart;
 - `levels`: the column name with the "levels" (or the "groups") you want to display in your funnel chart. In other words, the categorical data that identifies each level in the funnel;
 
-Lets take the `ggfunnel::aggregates` data.frame as an example:
+In the example below, we are using the `ggfunnel::aggregates` data.frame to build a basic funnel chart:
 
 ```r
 ggfunnel::aggregates
@@ -31,14 +31,14 @@ ggfunnel::aggregates
 5 E         120
 ```
 
-In the example below, we are using the data stored at `ggfunnel::aggregates` to build a basic funnel chart. The `N_users` column is the column with numerical data, so I give it to the `values` argument of the function. This way, these values will be used to determine the widths of each rectangle in the funnel chart. 
+The `N_users` column is the column with numerical data, so I give it to the `values` argument of the function. This way, these values will be used to determine the widths of each rectangle in the funnel chart. 
 
 In contrast, the `Step` column contains the categorical data of the dataset. That is why I gave this column to the `levels` argument of the function. As a result, the values of this column will be used to determine the "levels" of the funnel chart.
 
 ```r
 library(ggfunnel)
-plot <- ggfunnel::aggregates |>
-  ggfunnel::funnel(
+plot <- ggfunnel::funnel(
+    data = ggfunnel::aggregates,
     values = N_users, levels = Step
   )
 

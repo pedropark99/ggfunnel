@@ -7,6 +7,15 @@ like funnel charts in R. We give below a very basic example, but, if you want to
 more details about the package, and how it works, I recommend you to see `vignette("funnel")`.
 
 
+## How to get it ?
+
+For now, `{ggfunnel}` is available only at GitHub. You can download and install the package with the `devtools::install_github()` function:
+
+```r
+devtools::install_github("pedropark99/ggfunnel")
+```
+
+
 ## A basic example of use
 
 The main functionality of the package is available trough the `ggfunnel::funnel()` function. It is responsible for producing the plot, and you usually define 3 arguments in this function, which are:
